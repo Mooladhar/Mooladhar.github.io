@@ -1,0 +1,30 @@
+[
+  {
+    "id": 1,
+    "title": "Wireless Headphones",
+    "description": "High-quality wireless headphones with active noise cancellation and 30-hour battery life.",
+    "price": 129.99,
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=500&h=500&fit=crop"
+  },
+  {
+    "id": 2,
+    "title": "Smart Watch",
+    "description": "Feature-rich smartwatch with fitness tracking, heart rate monitor, and 7-day battery life.",
+    "price": 199.99,
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&h=500&fit=crop"
+  },
+  {
+    "id": 3,
+    "title": "USB-C Cable",
+    "description": "Durable 10ft USB-C charging and data transfer cable with fast charging support.",
+    "price": 14.99,
+    "image": "https://images.unsplash.com/photo-1625948515291-69613efd103f?w=500&h=500&fit=crop"
+  },
+  {
+    "id": 4,
+    "title": "Portable Speaker",
+    "description": "Waterproof Bluetooth speaker with 360-degree sound and 12-hour battery life.",
+    "price": 79.99,
+    "image": "https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=500&h=500&fit=crop"
+  }
+]
