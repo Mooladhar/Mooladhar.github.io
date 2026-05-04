@@ -1,0 +1,818 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Stablecoin Marketplace</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Header */
+    .header {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+
+    h1 {
+      font-size: 2.5em;
+      color: #333;
+      margin: 0;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+    }
+
+    .cart-icon {
+      position: relative;
+      cursor: pointer;
+      font-size: 1.5em;
+      transition: transform 0.3s ease;
+    }
+
+    .cart-icon:hover {
+      transform: scale(1.1);
+    }
+
+    .cart-count {
+      position: absolute;
+      top: -8px;
+      right: -8px;
+      background-color: #ff6b6b;
+      color: white;
+      border-radius: 50%;
+      width: 24px;
+      height: 24px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.8em;
+      font-weight: bold;
+    }
+
+    /* Controls Section */
+    .controls {
+      background: white;
+      padding: 20px;
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .search-box {
+      flex: 1;
+      min-width: 250px;
+      position: relative;
+    }
+
+    .search-box input {
+      width: 100%;
+      padding: 12px 15px;
+      border: 2px solid #e0e0e0;
+      border-radius: 8px;
+      font-size: 1em;
+      transition: border-color 0.3s ease;
+    }
+
+    .search-box input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+
+    .filter-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .filter-btn {
+      padding: 10px 18px;
+      border: 2px solid #e0e0e0;
+      background: white;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      color: #333;
+    }
+
+    .filter-btn:hover {
+      border-color: #667eea;
+      color: #667eea;
+    }
+
+    .filter-btn.active {
+      background: #667eea;
+      color: white;
+      border-color: #667eea;
+    }
+
+    /* Products Grid */
+    .products-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+
+    .product-card {
+      background: white;
+      border-radius: 15px;
+      overflow: hidden;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      transition: all 0.3s ease;
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+
+    .product-card:hover {
+      transform: translateY(-10px);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.2);
+    }
+
+    .product-image {
+      width: 100%;
+      height: 220px;
+      object-fit: contain;
+      background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+      padding: 20px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .coin-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .product-info {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      flex-grow: 1;
+    }
+
+    .product-category {
+      font-size: 0.85em;
+      color: #667eea;
+      font-weight: 600;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+    }
+
+    .product-title {
+      font-size: 1.3em;
+      font-weight: 700;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .product-description {
+      font-size: 0.85em;
+      color: #666;
+      margin-bottom: 15px;
+      flex-grow: 1;
+      line-height: 1.6;
+    }
+
+    .product-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: auto;
+      padding-top: 15px;
+      border-top: 1px solid #f0f0f0;
+    }
+
+    .product-price {
+      font-size: 1.6em;
+      font-weight: bold;
+      color: #667eea;
+    }
+
+    .add-to-cart-btn {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      padding: 10px 18px;
+      border-radius: 8px;
+      font-size: 0.95em;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-weight: 600;
+    }
+
+    .add-to-cart-btn:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .add-to-cart-btn:active {
+      transform: scale(0.98);
+    }
+
+    /* Cart Modal */
+    .cart-modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+      animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    .cart-modal.active {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .cart-content {
+      background: white;
+      padding: 30px;
+      border-radius: 15px;
+      width: 90%;
+      max-width: 500px;
+      max-height: 80vh;
+      overflow-y: auto;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    }
+
+    .cart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      border-bottom: 2px solid #f0f0f0;
+      padding-bottom: 15px;
+    }
+
+    .cart-header h2 {
+      margin: 0;
+      color: #333;
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 1.5em;
+      cursor: pointer;
+      color: #666;
+      transition: color 0.3s ease;
+    }
+
+    .close-btn:hover {
+      color: #333;
+    }
+
+    .cart-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px 0;
+      border-bottom: 1px solid #f0f0f0;
+      gap: 10px;
+    }
+
+    .cart-item-name {
+      flex-grow: 1;
+      font-weight: 600;
+      color: #333;
+    }
+
+    .cart-item-price {
+      color: #667eea;
+      font-weight: 700;
+    }
+
+    .cart-item-remove {
+      background: #ff6b6b;
+      color: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 0.85em;
+      transition: background 0.3s ease;
+    }
+
+    .cart-item-remove:hover {
+      background: #ff5252;
+    }
+
+    .cart-empty {
+      text-align: center;
+      padding: 40px 20px;
+      color: #999;
+      font-size: 1.1em;
+    }
+
+    .cart-total {
+      margin-top: 20px;
+      padding-top: 20px;
+      border-top: 2px solid #f0f0f0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 1.3em;
+      font-weight: 700;
+      color: #333;
+    }
+
+    .cart-total-price {
+      color: #667eea;
+    }
+
+    .checkout-btn {
+      width: 100%;
+      margin-top: 20px;
+      padding: 12px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 1em;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .checkout-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+    }
+
+    .checkout-btn:disabled {
+      background: #ccc;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Notification Styles */
+    .notification {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background-color: #4CAF50;
+      color: white;
+      padding: 16px 24px;
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 1em;
+      z-index: 1500;
+      animation: slideIn 0.3s ease, slideOut 0.3s ease 2.7s;
+    }
+
+    @keyframes slideIn {
+      from {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes slideOut {
+      from {
+        transform: translateX(0);
+        opacity: 1;
+      }
+      to {
+        transform: translateX(400px);
+        opacity: 0;
+      }
+    }
+
+    .loading {
+      text-align: center;
+      padding: 60px 20px;
+      font-size: 1.3em;
+      color: white;
+      font-weight: 600;
+    }
+
+    .error {
+      background-color: #f44336;
+      color: white;
+      padding: 20px;
+      border-radius: 15px;
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 20px;
+    }
+
+    .no-results {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 60px 20px;
+      background: white;
+      border-radius: 15px;
+      color: #666;
+      font-size: 1.2em;
+    }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-direction: column;
+        text-align: center;
+      }
+
+      h1 {
+        font-size: 1.8em;
+      }
+
+      .controls {
+        flex-direction: column;
+      }
+
+      .search-box {
+        min-width: 100%;
+      }
+
+      .products-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .cart-content {
+        width: 95%;
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <!-- Header with Cart -->
+    <div class="header">
+      <h1>💰 Stablecoin Marketplace</h1>
+      <div class="header-right">
+        <div class="cart-icon" onclick="toggleCart()">
+          🛒
+          <span class="cart-count" id="cartCount" style="display: none;">0</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Search and Filter Controls -->
+    <div class="controls">
+      <div class="search-box">
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search stablecoins..."
+          onkeyup="filterProducts()"
+        >
+      </div>
+      <div class="filter-group">
+        <button class="filter-btn active" onclick="filterByCategory('all')">All</button>
+        <button class="filter-btn" onclick="filterByCategory('usdc-based')">USDC Based</button>
+        <button class="filter-btn" onclick="filterByCategory('defi')">DeFi</button>
+        <button class="filter-btn" onclick="filterByCategory('regulated')">Regulated</button>
+      </div>
+    </div>
+
+    <!-- Products Container -->
+    <div id="productsContainer" class="products-grid">
+      <div class="loading">Loading products...</div>
+    </div>
+  </div>
+
+  <!-- Cart Modal -->
+  <div class="cart-modal" id="cartModal">
+    <div class="cart-content">
+      <div class="cart-header">
+        <h2>Shopping Cart</h2>
+        <button class="close-btn" onclick="toggleCart()">✕</button>
+      </div>
+      <div id="cartItems"></div>
+      <div class="cart-total" id="cartTotal" style="display: none;">
+        <span>Total:</span>
+        <span class="cart-total-price" id="totalPrice">$0.00</span>
+      </div>
+      <button class="checkout-btn" id="checkoutBtn" onclick="checkout()">Proceed to Checkout</button>
+    </div>
+  </div>
+
+  <script>
+    let allProducts = [];
+    let filteredProducts = [];
+    let cart = [];
+    let currentFilter = 'all';
+
+    // SVG creators for each coin
+    const coinGraphics = {
+      'Tether (USDT)': createTetherSVG,
+      'USD Coin (USDC)': createUSDCSVG,
+      'Ethena USDe (USDe)': createUsDesvg,
+      'Dai (DAI)': createDaiSVG,
+      'MakerDAO (MKR)': createMakerSVG,
+      'PayPal USD (PYUSD)': createPayPalSVG,
+      'Global Dollar (USDG)': createUSDGSVG
+    };
+
+    function createTetherSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#26A17B"/>
+          <text x="50" y="55" text-anchor="middle" font-size="32" font-weight="bold" fill="white">₮</text>
+        </svg>
+      `;
+    }
+
+    function createUSDCSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#2775CA"/>
+          <circle cx="50" cy="50" r="40" fill="#ffffff"/>
+          <text x="50" y="60" text-anchor="middle" font-size="36" font-weight="bold" fill="#2775CA">U</text>
+        </svg>
+      `;
+    }
+
+    function createUsDesvg() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#000000"/>
+          <circle cx="50" cy="50" r="42" fill="#FFD700"/>
+          <text x="50" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="black">USDe</text>
+        </svg>
+      `;
+    }
+
+    function createDaiSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#F7D300"/>
+          <text x="50" y="65" text-anchor="middle" font-size="40" font-weight="bold" fill="#333">◆</text>
+        </svg>
+      `;
+    }
+
+    function createMakerSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#1AAB9B"/>
+          <rect x="35" y="35" width="30" height="30" fill="white"/>
+          <text x="50" y="60" text-anchor="middle" font-size="24" font-weight="bold" fill="#1AAB9B">M</text>
+        </svg>
+      `;
+    }
+
+    function createPayPalSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#003087"/>
+          <path d="M40 35 Q40 30 45 30 L60 30 Q70 30 70 40 Q70 50 60 50 L45 50 L43 65 Q42 70 37 70 L35 70 L40 35 Z" fill="#109cff"/>
+        </svg>
+      `;
+    }
+
+    function createUSDGSVG() {
+      return `
+        <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="50" cy="50" r="48" fill="#6B5B95"/>
+          <circle cx="50" cy="50" r="38" fill="none" stroke="white" stroke-width="4"/>
+          <text x="50" y="60" text-anchor="middle" font-size="28" font-weight="bold" fill="white">G</text>
+        </svg>
+      `;
+    }
+
+    // Format currency
+    function formatCurrency(price) {
+      return new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      }).format(price);
+    }
+
+    // Show notification
+    function showNotification(message) {
+      const notification = document.createElement('div');
+      notification.className = 'notification';
+      notification.textContent = message;
+      document.body.appendChild(notification);
+      setTimeout(() => notification.remove(), 3000);
+    }
+
+    // Load products
+    async function loadProducts() {
+      try {
+        const response = await fetch('ProductsList.json');
+        if (!response.ok) throw new Error('Failed to load products');
+        allProducts = await response.json();
+        
+        // Add category to products
+        allProducts = allProducts.map((product, index) => {
+          const categories = [
+            ['usdc-based', 'regulated'],
+            ['usdc-based', 'regulated'],
+            ['defi'],
+            ['defi'],
+            ['defi'],
+            ['regulated'],
+            ['regulated']
+          ];
+          return { ...product, categories: categories[index] || ['defi'] };
+        });
+
+        filteredProducts = allProducts;
+        displayProducts(filteredProducts);
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('productsContainer').innerHTML = 
+          '<div class="error">Failed to load products. Please try again later.</div>';
+      }
+    }
+
+    // Display products
+    function displayProducts(products) {
+      const container = document.getElementById('productsContainer');
+      container.innerHTML = '';
+
+      if (products.length === 0) {
+        container.innerHTML = '<div class="no-results">No products found. Try adjusting your search or filters.</div>';
+        return;
+      }
+
+      products.forEach(product => {
+        const card = document.createElement('div');
+        card.className = 'product-card';
+        const svgGraphic = coinGraphics[product.title] ? coinGraphics[product.title]() : '';
+        const categories = product.categories ? product.categories.join(', ').toUpperCase() : 'STABLECOIN';
+        
+        card.innerHTML = `
+          <div class="product-image">${svgGraphic}</div>
+          <div class="product-info">
+            <div class="product-category">${categories}</div>
+            <h2 class="product-title">${product.title}</h2>
+            <p class="product-description">${product.description}</p>
+            <div class="product-footer">
+              <span class="product-price">${formatCurrency(product.price)}</span>
+              <button class="add-to-cart-btn" onclick="addToCart(${product.id}, '${product.title}', ${product.price})">Add to Cart</button>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // Add to cart
+    function addToCart(id, title, price) {
+      const existingItem = cart.find(item => item.id === id);
+      if (existingItem) {
+        existingItem.quantity++;
+      } else {
+        cart.push({ id, title, price, quantity: 1 });
+      }
+      updateCart();
+      showNotification(`✓ ${title} added to cart!`);
+    }
+
+    // Update cart display
+    function updateCart() {
+      const cartCount = document.getElementById('cartCount');
+      const totalItems = cart.reduce((sum, item) => sum + item.quantity, 0);
+      
+      if (totalItems > 0) {
+        cartCount.textContent = totalItems;
+        cartCount.style.display = 'flex';
+      } else {
+        cartCount.style.display = 'none';
+      }
+
+      // Update cart items display
+      const cartItemsDiv = document.getElementById('cartItems');
+      if (cart.length === 0) {
+        cartItemsDiv.innerHTML = '<div class="cart-empty">Your cart is empty</div>';
+        document.getElementById('cartTotal').style.display = 'none';
+        document.getElementById('checkoutBtn').disabled = true;
+      } else {
+        cartItemsDiv.innerHTML = cart.map(item => `
+          <div class="cart-item">
+            <span class="cart-item-name">${item.title}</span>
+            <span class="cart-item-price">${formatCurrency(item.price * item.quantity)}</span>
+            <button class="cart-item-remove" onclick="removeFromCart(${item.id})">Remove</button>
+          </span>
+        `).join('');
+        
+        const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+        document.getElementById('totalPrice').textContent = formatCurrency(total);
+        document.getElementById('cartTotal').style.display = 'flex';
+        document.getElementById('checkoutBtn').disabled = false;
+      }
+    }
+
+    // Remove from cart
+    function removeFromCart(id) {
+      cart = cart.filter(item => item.id !== id);
+      updateCart();
+    }
+
+    // Toggle cart modal
+    function toggleCart() {
+      document.getElementById('cartModal').classList.toggle('active');
+    }
+
+    // Close cart modal when clicking outside
+    window.onclick = function(event) {
+      const modal = document.getElementById('cartModal');
+      if (event.target == modal) {
+        modal.classList.remove('active');
+      }
+    }
+
+    // Filter by category
+    function filterByCategory(category) {
+      currentFilter = category;
+      
+      // Update button styles
+      document.querySelectorAll('.filter-btn').forEach(btn => {
+        btn.classList.remove('active');
+      });
+      event.target.classList.add('active');
+
+      // Filter products
+      if (category === 'all') {
+        filteredProducts = allProducts;
+      } else {
+        filteredProducts = allProducts.filter(product => 
+          product.categories.includes(category)
+        );
+      }
+
+      // Apply search filter as well
+      filterProducts();
+    }
+
+    // Search and filter products
+    function filterProducts() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      let results = filteredProducts;
+      if (searchTerm) {
+        results = results.filter(product =>
+          product.title.toLowerCase().includes(searchTerm) ||
+          product.description.toLowerCase().includes(searchTerm)
+        );
+      }
+
+      displayProducts(results);
+    }
+
+    // Checkout
+    function checkout() {
+      const total = cart.reduce((sum, item) => sum + (item.price * item.quantity), 0);
+      alert(`Order Summary:\n\nItems: ${cart.map(item => `${item.title} (×${item.quantity})`).join('\n')}\n\nTotal: ${formatCurrency(total)}\n\nProceeding to secure checkout...`);
+      cart = [];
+      updateCart();
+      toggleCart();
+    }
+
+    // Load products on page load
+    window.addEventListener('DOMContentLoaded', loadProducts);
+  </script>
+</body>
+</html>
